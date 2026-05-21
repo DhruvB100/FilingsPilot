@@ -5,3 +5,9 @@ lxml
 psycopg[binary]
 pgvector
 openai
+langgraph
+langchain-core
+langchain-openai
+langchain-google-genai
+sqlglot
+pytest
