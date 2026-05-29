@@ -1,0 +1,10 @@
+.env
+.venv
+secrets
+data
+web
+mcp-server
+infra
+.git
+**/__pycache__
+**/node_modules

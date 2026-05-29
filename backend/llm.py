@@ -25,6 +25,7 @@ def get_llm(provider=None, max_tokens=2000):
             model=os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT"),
             reasoning_effort="low",
             max_tokens=max_tokens,
+            stream_usage=True,  # without this token usage is missing when streaming -> cost shows $0
             timeout=90,
             max_retries=3,
         )

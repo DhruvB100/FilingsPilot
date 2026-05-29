@@ -10,4 +10,7 @@ langchain-core
 langchain-openai
 langchain-google-genai
 sqlglot
+fastapi
+uvicorn
+azure-cosmos
 pytest

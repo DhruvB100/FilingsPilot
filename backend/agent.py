@@ -101,10 +101,8 @@ def build_agent(sources, provider=None):
         return "finalize"
 
     def finalize_node(state):
-        answer = state["messages"][-1].content
-        if isinstance(answer, list):  # gemini sometimes returns content parts
-            answer = "".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in answer)
-        answer, cited = check_citations(answer, sources)
+        # gemini sometimes returns a list of content parts instead of a string
+        answer, cited = check_citations(text_of(state["messages"][-1].content), sources)
         return {"answer": answer, "cited": cited}
 
     graph = StateGraph(State)
@@ -162,23 +160,67 @@ def summarize_steps(state, sources):
     return steps
 
 
-def run_agent(question, history=None, provider=None):
+def text_of(content):
+    if isinstance(content, list):
+        return "".join(p.get("text", "") if isinstance(p, dict) else str(p) for p in content)
+    return content or ""
+
+
+def stream_agent(question, history=None, provider=None):
+    """yields events as the agent works: plan, tool_call, tool_result, token, and finally 'final'"""
+    provider = provider or os.getenv("LLM_PROVIDER", "azure")
     sources = {}
     app = build_agent(sources, provider)
     start = time.time()
-    state = app.invoke({"messages": to_messages(history) + [HumanMessage(question)]}, {"recursion_limit": 30})
-    provider = provider or os.getenv("LLM_PROVIDER", "azure")
-    return {
+    state = {"messages": to_messages(history) + [HumanMessage(question)]}
+
+    for mode, data in app.stream(state, {"recursion_limit": 30}, stream_mode=["updates", "messages"]):
+        if mode == "messages":
+            chunk, meta = data
+            # only stream the agent's text, not the planner json or tool call args
+            if meta.get("langgraph_node") == "agent" and text_of(chunk.content):
+                yield {"type": "token", "text": text_of(chunk.content)}
+            continue
+
+        # mode == "updates": {node_name: what the node returned}
+        for node, update in data.items():
+            if not update:
+                continue
+            for key, value in update.items():
+                if key == "messages":
+                    state["messages"] = state["messages"] + value
+                else:
+                    state[key] = value
+            if node == "plan":
+                yield {"type": "plan", "steps": update.get("plan", [])}
+            elif node == "agent":
+                for tc in update["messages"][-1].tool_calls:
+                    yield {"type": "tool_call", "tool": tc["name"], "args": tc["args"]}
+            elif node == "tools":
+                for m in update["messages"]:
+                    yield {"type": "tool_result", "tool": m.name, "preview": str(m.content)[:400]}
+
+    steps = summarize_steps(state, sources)
+    yield {
+        "type": "final",
         "answer": state["answer"],
         "sources": {k: sources[k] for k in state["cited"]},
         "all_sources": sources,
-        "steps": summarize_steps(state, sources),
-        "tools_used": [s["tool"] for s in summarize_steps(state, sources) if s["type"] == "tool_call"],
+        "steps": steps,
+        "tools_used": [s["tool"] for s in steps if s["type"] == "tool_call"],
         "input_tokens": state.get("input_tokens", 0),
         "output_tokens": state.get("output_tokens", 0),
         "cost_usd": round(llm_module.cost(provider, state.get("input_tokens", 0), state.get("output_tokens", 0)), 5),
         "latency_s": round(time.time() - start, 2),
     }
+
+
+def run_agent(question, history=None, provider=None):
+    result = None
+    for event in stream_agent(question, history, provider):
+        if event["type"] == "final":
+            result = event
+    return result
 
 
 if __name__ == "__main__":
