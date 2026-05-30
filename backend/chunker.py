@@ -56,7 +56,11 @@ def clean_html(path):
             tag.insert_after(NavigableString(PAGE_MARK))
 
     # block elements end with a newline so words from different paragraphs don't glue together
+    # BUT TD's filings use <div style="display:inline-block">&nbsp;</div> as the space between
+    # every single word, so those divs must not get a newline (was getting one word per line)
     for tag in soup.find_all(["p", "div", "li", "h1", "h2", "h3", "h4", "br"]):
+        if "inline" in tag.get("style", "").replace(" ", "").lower():
+            continue
         tag.append(NavigableString("\n"))
 
     return soup.get_text("")
