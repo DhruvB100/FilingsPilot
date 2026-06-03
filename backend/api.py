@@ -53,6 +53,7 @@ def chat(req: ChatRequest):
             for event in stream_agent(req.question, history):
                 if event["type"] == "final":
                     event.pop("all_sources", None)
+                    event.pop("context", None)
                     memory.add_turn(session["id"], req.question, event)
                 yield sse(event)
         except Exception as e:
@@ -68,6 +69,7 @@ def chat_sync(req: ChatRequest):
     history = memory.get_history(req.session_id) if req.session_id else []
     result = run_agent(req.question, history)
     result.pop("all_sources", None)
+    result.pop("context", None)
     return result
 
 

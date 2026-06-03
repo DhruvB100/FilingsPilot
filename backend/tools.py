@@ -56,7 +56,7 @@ def make_tools(sources):
                     label = k
             sources[label] = {
                 "type": "filing", "chunk_id": r["id"], "ticker": r["ticker"], "company": r["company"],
-                "fiscal_year": r["fiscal_year"], "doc_type": r["doc_type"], "page": r["page"],
+                "fiscal_year": r["fiscal_year"], "doc_type": r["doc_type"], "doc_file": r["doc_file"], "page": r["page"],
                 "section": r["section"], "url": r["doc_url"], "snippet": r["content"][:300],
             }
             out.append(
