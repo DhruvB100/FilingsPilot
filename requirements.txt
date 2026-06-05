@@ -14,3 +14,4 @@ fastapi
 uvicorn
 azure-cosmos
 pytest
+httpx

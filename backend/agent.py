@@ -21,6 +21,7 @@ warnings.filterwarnings("ignore", message="Pydantic serializer warnings")
 MAX_TOOL_ROUNDS = 6
 MAX_TOKENS = int(os.getenv("MAX_TOKENS_PER_REQUEST", "40000"))
 REFUSAL = "I couldn't find this in the filings I have, so I can't answer it with a source."
+BLOCKED = "I can't help with that request. I only answer questions about these companies' annual filings."
 
 SYSTEM_PROMPT = """You are FilingsPilot, an assistant that answers questions about the SEC annual filings
 (fiscal 2024 and 2025) of 10 Canadian companies: Cenovus (CVE), Suncor (SU), TC Energy (TRP), Enbridge (ENB),
@@ -87,12 +88,20 @@ def build_agent(sources, provider=None):
         plan_text = "\n".join(f"- {s}" for s in state.get("plan", []))
         msgs = [SystemMessage(SYSTEM_PROMPT + ("\n\nYour plan:\n" + plan_text if plan_text else ""))] + state["messages"]
         used = state.get("input_tokens", 0) + state.get("output_tokens", 0)
-        if used > MAX_TOKENS or state.get("tool_rounds", 0) >= MAX_TOOL_ROUNDS:
-            # out of budget -> answer with what we have, no more tools
-            msgs.append(HumanMessage("Tool budget used up. Answer now using only the sources above, with citations."))
-            response = model.invoke(msgs)
-        else:
-            response = model_with_tools.invoke(msgs)
+        try:
+            if used > MAX_TOKENS or state.get("tool_rounds", 0) >= MAX_TOOL_ROUNDS:
+                # out of budget -> answer with what we have, no more tools
+                msgs.append(HumanMessage("Tool budget used up. Answer now using only the sources above, with citations."))
+                response = model.invoke(msgs)
+            else:
+                response = model_with_tools.invoke(msgs)
+        except Exception as e:
+            # azure's content filter (prompt shields) throws a 400 on jailbreak attempts instead of answering,
+            # that used to crash the whole request. treat it as a refusal
+            if "content_filter" not in str(e):
+                raise
+            print("blocked by azure content filter")
+            response = AIMessage(BLOCKED)
         update = count_tokens(state, response)
         update["messages"] = [response]
         if response.tool_calls:
