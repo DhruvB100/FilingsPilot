@@ -2,7 +2,7 @@ import os
 import time
 from openai import OpenAI, RateLimitError
 
-from backend import config  # noqa, loads .env
+from backend import config  # noqa: F401  (loads .env)
 
 EMBED_DIMS = 512  # text-embedding-3-small can shrink dims, 512 is plenty and the db stays small
 PRICE_PER_1M = 0.02  # USD, text-embedding-3-small

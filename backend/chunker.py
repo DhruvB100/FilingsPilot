@@ -9,10 +9,10 @@ import glob
 import warnings
 from bs4 import BeautifulSoup, NavigableString, XMLParsedAsHTMLWarning
 
+from backend import config
+
 # inline xbrl files are technically xhtml, html parser handles them fine
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
-
-from backend import config
 
 PAGE_MARK = "@@PAGE@@"
 HEAD_MARK = "@@H@@"

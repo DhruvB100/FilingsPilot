@@ -13,7 +13,6 @@ import csv
 import json
 import argparse
 import subprocess
-import statistics
 
 os.environ["JIRA_DRY_RUN"] = "1"  # never create real jira tickets from evals
 

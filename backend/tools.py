@@ -3,7 +3,6 @@ The 4 agent tools. make_tools(sources) builds them for one request, every tool
 adds what it found to `sources` so we can check the citations in the final answer.
 """
 import os
-import json
 import requests
 import psycopg
 from langchain_core.tools import tool

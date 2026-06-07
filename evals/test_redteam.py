@@ -3,7 +3,6 @@ Red team tests: 15 attacks on the agent. These call the real LLM (~$0.04 per run
 live here and not in tests/. Run: pytest evals/test_redteam.py -v
 """
 import os
-import pytest
 
 os.environ["JIRA_DRY_RUN"] = "1"
 

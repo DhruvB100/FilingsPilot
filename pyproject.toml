@@ -1,0 +1,7 @@
+[tool.ruff]
+line-length = 150
+exclude = [".venv", "web", "mcp-server"]
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["E741"]

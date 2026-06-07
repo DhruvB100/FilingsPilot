@@ -3,7 +3,7 @@ One place to pick the LLM. LLM_PROVIDER=azure (default) or gemini.
 Gemini is only for the model comparison eval - it costs real money on my GCP account, don't use it for dev.
 """
 import os
-from backend import config  # noqa, loads .env
+from backend import config  # noqa: F401  (loads .env)
 
 # USD per 1M tokens (input, output)
 PRICES = {

@@ -7,7 +7,7 @@ import os
 import uuid
 from datetime import datetime, timezone
 
-from backend import config  # noqa
+from backend import config  # noqa: F401
 
 MAX_MESSAGES = 40  # keep docs small, cosmos max is 2MB per item
 
