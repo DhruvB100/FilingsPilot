@@ -17,6 +17,11 @@ def conn():
     global _conn
     if _conn is None or _conn.closed:
         _conn = get_conn()
+        # with WHERE ticker = ANY(...) postgres sometimes picks the hnsw index, which grabs the ef_search
+        # nearest rows from ALL companies first and filters after -> only 24 of 40 results for 2 tickers.
+        # iterative scan (pgvector 0.8) keeps scanning until it has enough rows that pass the filter
+        _conn.execute("SET hnsw.iterative_scan = relaxed_order")
+        _conn.execute("SET hnsw.ef_search = 100")
     return _conn
 
 
