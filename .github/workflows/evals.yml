@@ -1,0 +1,53 @@
+name: evals
+
+# runs the 10 question CI subset + red team tests on PRs that touch the agent.
+# costs ~$0.07 of azure openai per run so it's path filtered, and can be run by hand.
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - "evals/**"
+      - "sql/**"
+      - "requirements.txt"
+  workflow_dispatch:
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: filings
+          POSTGRES_PASSWORD: filings
+          POSTGRES_DB: filings
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://filings:filings@localhost:5432/filings
+      AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+      AZURE_OPENAI_CHAT_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_CHAT_DEPLOYMENT }}
+      AZURE_OPENAI_EMBED_DEPLOYMENT: ${{ secrets.AZURE_OPENAI_EMBED_DEPLOYMENT }}
+      LLM_PROVIDER: azure
+      JIRA_DRY_RUN: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: load db fixture
+        run: python scripts/ci_fixture.py load
+      - name: eval subset (fails if scores drop vs baseline)
+        run: python -m evals.run --subset ci --max-cost 0.25 --check evals/baseline_ci.json
+      - name: red team
+        run: pytest -q evals/test_redteam.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: eval-results
+          path: evals/results/
