@@ -8,7 +8,7 @@ from backend import config  # noqa: F401  (loads .env)
 # USD per 1M tokens (input, output)
 PRICES = {
     "azure": (0.25, 2.00),   # gpt-5-mini
-    "gemini": (0.30, 2.50),  # gemini-2.5-flash
+    "gemini": (0.50, 3.00),  # gemini-3-flash-preview
 }
 
 
@@ -33,14 +33,14 @@ def get_llm(provider=None, max_tokens=2000):
     if provider == "gemini":
         from langchain_google_genai import ChatGoogleGenerativeAI
         # vertexai=True -> goes through GCP (Agent Platform API) with the service account in secrets/
+        # gemini-2.5-flash gives 404 on my (new) project, 3-flash-preview only works in the "global" location
         return ChatGoogleGenerativeAI(
-            model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"),
+            model=os.getenv("GEMINI_MODEL", "gemini-3-flash-preview"),
             vertexai=True,
             project=os.getenv("GCP_PROJECT_ID"),
-            location=os.getenv("GCP_LOCATION", "us-central1"),
+            location=os.getenv("GCP_LOCATION", "global"),
             max_output_tokens=max_tokens,
-            thinking_budget=512,
-            temperature=0,
+            thinking_config={"thinking_level": "low"},
         )
 
     raise ValueError("unknown LLM_PROVIDER " + provider)

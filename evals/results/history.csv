@@ -1,0 +1,3 @@
+commit,commit_date,provider,subset,questions,errors,answer_correctness,faithfulness,citation_accuracy,recall_at_5,tool_accuracy,avg_latency_s,p95_latency_s,agent_cost_usd,judge_cost_usd,cost_per_question_usd,correct_calc,correct_hybrid,correct_lookup,correct_refusal,correct_text
+d9d7970,2026-06-09T21:37:00-06:00,gemini,full,50,0,0.92,0.963,0.739,0.667,0.909,9.817,13.99,0.2038,0.0277,0.00408,1.0,0.75,1.0,1.0,0.824
+d9d7970,2026-06-09T21:37:00-06:00,azure,full,50,0,0.92,0.988,0.83,0.667,0.977,17.01,35.96,0.1115,0.023,0.00223,1.0,0.5,1.0,1.0,0.882
