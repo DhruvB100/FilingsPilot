@@ -2,6 +2,7 @@
 Hybrid search = keyword (postgres full text) + vector (pgvector), merged with reciprocal rank fusion.
 Run: python -m backend.search "cenovus capital spending 2025" CVE
 """
+import re
 import sys
 
 from backend.db import get_conn
@@ -47,18 +48,35 @@ def vector_search(query, tickers=None, years=None, limit=CANDIDATES):
 
 
 def keyword_search(query, tickers=None, years=None, limit=CANDIDATES):
-    where, params = build_filters(tickers, years)
-    # websearch_to_tsquery ANDs all words which is too strict for questions,
-    # so OR the words together and let ts_rank sort it out
-    words = [w for w in query.replace("'", " ").split() if w.isalnum()]
+    words = keywords(query)
     if not words:
         return []
+    # first chunks that have ALL the words, then fill up with chunks that have ANY of them.
+    # just OR-ing everything (first version) ranked long chunks full of "2025" and "ratio" on top
+    ids = run_tsquery(" & ".join(words), tickers, years, limit)
+    if len(ids) < limit:
+        ids += [i for i in run_tsquery(" | ".join(words), tickers, years, limit) if i not in ids]
+    return ids[:limit]
+
+
+# company names match every chunk once we filter by ticker, and question words are just noise
+SKIP_WORDS = {"cenovus", "suncor", "tc", "energy", "enbridge", "canadian", "natural", "resources", "cnq", "rbc", "royal",
+              "bank", "td", "bmo", "montreal", "cibc", "shopify", "company", "what", "how", "much", "why", "did", "does",
+              "was", "were", "when", "which", "and", "the", "its", "in", "of", "a", "to", "from", "for", "is", "it", "at",
+              "as", "by", "end", "give", "say", "said", "reason"}
+
+
+def keywords(query):
+    words = re.sub(r"[^A-Za-z0-9 ]", " ", query.replace("'s", "")).lower().split()
+    return [w for w in words if w not in SKIP_WORDS]
+
+
+def run_tsquery(tsquery, tickers, years, limit):
+    where, params = build_filters(tickers, years)
     where.append("tsv @@ to_tsquery('english', %s)")
-    tsquery = " | ".join(words)
     sql = f"""SELECT id FROM chunks WHERE {' AND '.join(where)}
               ORDER BY ts_rank_cd(tsv, to_tsquery('english', %s)) DESC LIMIT %s"""
-    rows = conn().execute(sql, params + [tsquery, tsquery, limit]).fetchall()
-    return [r[0] for r in rows]
+    return [r[0] for r in conn().execute(sql, params + [tsquery, tsquery, limit]).fetchall()]
 
 
 def hybrid_search(query, tickers=None, years=None, k=5):

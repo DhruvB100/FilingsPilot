@@ -9,14 +9,21 @@ from backend.search import hybrid_search
 SCALES = {"trillion": 1e12, "billion": 1e9, "bn": 1e9, "b": 1e9, "million": 1e6, "m": 1e6, "thousand": 1e3, "k": 1e3}
 NUM = re.compile(r"(\d[\d,]*\.?\d*)\s*(trillion|billion|million|thousand|bn|b|m|k)?\b", re.I)
 
-REFUSAL_PHRASES = ["couldn't find", "could not find", "can't answer", "cannot answer", "not able to", "unable to",
-                   "only answer questions", "decline", "can't help", "cannot help", "can't provide", "cannot provide",
-                   "don't have", "do not have", "not in the filings", "outside"]
+# careful with these, "decline" used to be in here and matched "revenue declined" -> correct answers
+# got treated as refusals and skipped the faithfulness judge
+REFUSAL_PHRASES = ["couldn't find", "could not find", "can't answer", "cannot answer", "not able to answer", "unable to answer",
+                   "only answer questions", "i must decline", "i'll have to decline", "can't help with", "cannot help with",
+                   "can't provide", "cannot provide", "not in the filings", "outside what i can"]
 
 
 def extract_numbers(text):
+    text = text.replace(" ", " ")
+    # ranges like "C$6.0 to C$6.5 billion" or "$6.0-6.5 billion": the scale word only comes after the
+    # second number, so copy it to the first one (this was scoring a correct answer as wrong)
+    text = re.sub(r"(\d[\d,]*\.?\d*)(\s*(?:to|-|–)\s*(?:C\$|US\$|\$)?\s*\d[\d,]*\.?\d*\s*(trillion|billion|million))",
+                  r"\1 \3\2", text, flags=re.I)
     nums = []
-    for value, scale in NUM.findall(text.replace(" ", " ")):
+    for value, scale in NUM.findall(text):
         try:
             n = float(value.replace(",", ""))
         except ValueError:

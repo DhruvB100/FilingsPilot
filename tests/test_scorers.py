@@ -35,3 +35,12 @@ def test_citation_page_match():
     bad = {"sources": {"S1": {"type": "filing", "ticker": "CVE", "fiscal_year": 2025, "doc_file": "b.htm", "page": 6}}}
     assert citation_accuracy(item, good) == 1.0
     assert citation_accuracy(item, bad) == 0.0
+
+
+def test_range_gets_scale_on_both_numbers():
+    nums = extract_numbers("approximately C$6.0 to C$6.5 billion")
+    assert 6.0e9 in nums and 6.5e9 in nums
+
+
+def test_declined_is_not_a_refusal():
+    assert not is_refusal("Revenue declined 8% because of lower prices [F1]")

@@ -48,3 +48,13 @@ def test_no_citation_becomes_refusal():
 def test_refusal_passes_through():
     answer, cited = check_citations("I couldn't find this in the filings.", {})
     assert answer.startswith("I couldn't find")
+
+
+def test_semicolon_citations():
+    answer, cited = check_citations("Capex was C$6B [S1; S2].", {"S1": {}, "S2": {}})
+    assert cited == ["S1", "S2"] and "[S1, S2]" in answer
+
+
+def test_removing_fake_label_keeps_s10():
+    answer, cited = check_citations("A [S1] B [S10]", {"S10": {}})
+    assert "S10" in answer and cited == ["S10"]
