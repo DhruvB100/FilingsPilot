@@ -1,0 +1,1826 @@
+{
+ "summary": {
+  "commit": "36accc0",
+  "commit_date": "2026-06-13T15:40:00-06:00",
+  "provider": "azure",
+  "subset": "full",
+  "questions": 50,
+  "errors": 0,
+  "answer_correctness": 0.96,
+  "faithfulness": 1.0,
+  "citation_accuracy": 0.955,
+  "recall_at_5": 0.857,
+  "tool_accuracy": 0.977,
+  "avg_latency_s": 15.879,
+  "p95_latency_s": 30.11,
+  "agent_cost_usd": 0.1312,
+  "judge_cost_usd": 0.0266,
+  "cost_per_question_usd": 0.00262,
+  "correct_calc": 1.0,
+  "correct_hybrid": 0.75,
+  "correct_lookup": 1.0,
+  "correct_refusal": 1.0,
+  "correct_text": 0.941,
+  "rescored": true
+ },
+ "items": [
+  {
+   "id": "A01",
+   "category": "lookup",
+   "question": "What was Suncor's net income in fiscal 2025?",
+   "answer": "Suncor\u2019s consolidated net earnings for the year ended December 31, 2025 were C$5.918 billion [F1][S1].",
+   "tools_used": [
+    "query_financials",
+    "search_filings",
+    "search_filings"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, metric, fiscal_year, value, unit, source_tag, form FROM financials WHERE ticker = 'SU' AND fiscal_year = 2025 AND metric IN ('net_income_to_shareholders', 'net_income') ORDER BY metric LIMIT 200"
+    },
+    "S1": {
+     "type": "filing",
+     "ticker": "SU",
+     "fiscal_year": 2025,
+     "doc_file": "su-20251231xex99d2.htm",
+     "page": 5,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 18.31,
+   "cost_usd": 0.00451,
+   "input_tokens": 11663,
+   "output_tokens": 799,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A02",
+   "category": "lookup",
+   "question": "What was Canadian Natural Resources' total revenue in 2024?",
+   "answer": "Canadian Natural Resources reported total revenue of C$35.656 billion for fiscal 2024 [F1].",
+   "tools_used": [
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CNQ' AND metric = 'revenue' AND fiscal_year = 2024 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 6.85,
+   "cost_usd": 0.00136,
+   "input_tokens": 2609,
+   "output_tokens": 353,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A03",
+   "category": "lookup",
+   "question": "What was RBC's diluted earnings per share for fiscal 2025?",
+   "answer": "RBC's diluted earnings per share for fiscal 2025 were C$14.07 per share [F1].",
+   "tools_used": [
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag, form, accession FROM financials WHERE ticker = 'RY' AND metric = 'eps_diluted' AND fiscal_year = 2025 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 7.57,
+   "cost_usd": 0.00121,
+   "input_tokens": 2710,
+   "output_tokens": 268,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A04",
+   "category": "lookup",
+   "question": "How much were TD Bank's total assets at the end of fiscal 2025?",
+   "answer": "TD's consolidated total assets at 2025-10-31 were C$2,094.558 billion (C$2,094,558,000,000) [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, period_end, source_tag, form FROM financials WHERE ticker = 'TD' AND metric = 'total_assets' AND fiscal_year = 2025 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 11.46,
+   "cost_usd": 0.00229,
+   "input_tokens": 4112,
+   "output_tokens": 633,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A05",
+   "category": "lookup",
+   "question": "What did BMO report as net income for fiscal 2024?",
+   "answer": "BMO reported net income of C$7,327 million for fiscal 2024 [S1][F1].",
+   "tools_used": [
+    "search_filings",
+    "query_financials"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2024,
+     "doc_file": "d878486dex992.htm",
+     "page": 14,
+     "sql": null
+    },
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT value, unit, source_tag, fiscal_year FROM financials WHERE ticker = 'BMO' AND metric = 'net_income' AND fiscal_year = 2024 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 12.44,
+   "cost_usd": 0.00247,
+   "input_tokens": 6543,
+   "output_tokens": 417,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A06",
+   "category": "lookup",
+   "question": "How much did Shopify spend on research and development in 2025?",
+   "answer": "Shopify's research and development expense for fiscal 2025 was US$1,536 million (US$1.536 billion) [S2][F1].",
+   "tools_used": [
+    "search_filings",
+    "query_financials"
+   ],
+   "cited": {
+    "S2": {
+     "type": "filing",
+     "ticker": "SHOP",
+     "fiscal_year": 2025,
+     "doc_file": "shop-20251231.htm",
+     "page": 55,
+     "sql": null
+    },
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'SHOP' AND metric = 'rd_expense' AND fiscal_year = 2025 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 12.19,
+   "cost_usd": 0.00232,
+   "input_tokens": 6248,
+   "output_tokens": 380,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A07",
+   "category": "lookup",
+   "question": "What was CIBC's total revenue in fiscal 2025?",
+   "answer": "CIBC reported total revenue of C$29.133 billion in fiscal 2025 [F1].",
+   "tools_used": [
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CM' AND fiscal_year = 2025 AND metric IN ('revenue', 'total_revenue', 'total_income') ORDER BY metric LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 8.81,
+   "cost_usd": 0.00115,
+   "input_tokens": 2639,
+   "output_tokens": 244,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A08",
+   "category": "lookup",
+   "question": "What was TC Energy's net income in 2025?",
+   "answer": "TC Energy reported net income of C$4,094,000,000 for fiscal 2025 [F1].",
+   "tools_used": [
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag, metric FROM financials WHERE ticker = 'TRP' AND metric = 'net_income' AND fiscal_year = 2025 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 8.28,
+   "cost_usd": 0.00149,
+   "input_tokens": 2609,
+   "output_tokens": 420,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A09",
+   "category": "lookup",
+   "question": "What was Cenovus's cash from operating activities in 2025?",
+   "answer": "Cenovus's cash from operating activities in 2025 was C$8,228 million (C$8.228 billion) [S2][S5][F1].",
+   "tools_used": [
+    "search_filings",
+    "query_financials"
+   ],
+   "cited": {
+    "S2": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "a2025managementsdiscussion.htm",
+     "page": 36,
+     "sql": null
+    },
+    "S5": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "cve-20251231.htm",
+     "page": 11,
+     "sql": null
+    },
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CVE' AND metric = 'operating_cash_flow' AND fiscal_year = 2025 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 12.08,
+   "cost_usd": 0.00276,
+   "input_tokens": 6435,
+   "output_tokens": 574,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A10",
+   "category": "lookup",
+   "question": "How much did Enbridge pay to acquire property, plant and equipment in 2024?",
+   "answer": "Enbridge paid C$6,711 million to acquire property, plant and equipment in 2024 [F1][S2].",
+   "tools_used": [
+    "query_financials",
+    "search_filings"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag, metric FROM financials WHERE ticker = 'ENB' AND fiscal_year = 2024 AND metric IN ('capex', 'capex') LIMIT 200"
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2024,
+     "doc_file": "enb-20241231.htm",
+     "page": 85,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 10.4,
+   "cost_usd": 0.00234,
+   "input_tokens": 4507,
+   "output_tokens": 608,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A11",
+   "category": "lookup",
+   "question": "What was Shopify's operating income in 2025?",
+   "answer": "Shopify reported operating income of US$1,468,000,000 for fiscal 2025 (US$1.468 billion) [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'SHOP' AND metric = 'operating_income' AND fiscal_year = 2025 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 18.71,
+   "cost_usd": 0.0026,
+   "input_tokens": 4011,
+   "output_tokens": 797,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A12",
+   "category": "lookup",
+   "question": "How much did Canadian Natural pay in dividends in 2025?",
+   "answer": "Canadian Natural paid C$4.871 billion in dividends in fiscal 2025 [F1].",
+   "tools_used": [
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CNQ' AND metric = 'dividends_paid' AND fiscal_year = 2025 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 7.67,
+   "cost_usd": 0.00126,
+   "input_tokens": 2643,
+   "output_tokens": 301,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "A13",
+   "category": "lookup",
+   "question": "What was Suncor's basic earnings per share in 2024?",
+   "answer": "Suncor's basic earnings per share (2024) were C$4.72 per share [F1].",
+   "tools_used": [
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'SU' AND metric = 'eps_basic' AND fiscal_year = 2024 LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 7.91,
+   "cost_usd": 0.00113,
+   "input_tokens": 2640,
+   "output_tokens": 236,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B01",
+   "category": "calc",
+   "question": "By what percentage did Cenovus's revenue change from 2024 to 2025?",
+   "answer": "Cenovus revenue fell from C$54,277.0 million in 2024 to C$49,696.0 million in 2025 \u2014 a change of -8.44% (growth_rate = (49,696,000,000 \u2212 54,277,000,000) / 54,277,000,000). Source: [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CVE' AND metric = 'revenue' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 10.15,
+   "cost_usd": 0.00164,
+   "input_tokens": 4017,
+   "output_tokens": 319,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B02",
+   "category": "calc",
+   "question": "What was Enbridge's revenue growth rate from 2024 to 2025?",
+   "answer": "Enbridge revenue grew from C$53,473,000,000 in 2024 to C$65,194,000,000 in 2025 \u2014 a growth rate of 21.92% [F1][F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'ENB' AND metric = 'revenue' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 10.77,
+   "cost_usd": 0.00145,
+   "input_tokens": 4017,
+   "output_tokens": 225,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B03",
+   "category": "calc",
+   "question": "Which bank earned more net income in fiscal 2025, RBC or TD, and by how much?",
+   "answer": "Toronto\u2011Dominion (TD) earned more. TD net income (FY2025) = C$20,538 million [F1][S6]; RBC net income (FY2025) = C$20,369 million [F1][S4]. TD earned C$169 million more than RBC in fiscal 2025 (C$20,538m \u2212 C$20,369m = C$169m) [F1][S6][S4].",
+   "tools_used": [
+    "query_financials",
+    "search_filings",
+    "search_filings",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, metric, fiscal_year, value, unit, source_tag FROM financials WHERE metric = 'net_income' AND fiscal_year = 2025 AND ticker IN ('RY', 'TD') LIMIT 200"
+    },
+    "S6": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex993.htm",
+     "page": 13,
+     "sql": null
+    },
+    "S4": {
+     "type": "filing",
+     "ticker": "RY",
+     "fiscal_year": 2025,
+     "doc_file": "d95203dex2.htm",
+     "page": 131,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 19.05,
+   "cost_usd": 0.00508,
+   "input_tokens": 13347,
+   "output_tokens": 872,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B04",
+   "category": "calc",
+   "question": "How much did Canadian Natural's net income grow in percent from 2024 to 2025?",
+   "answer": "Canadian Natural's net income grew from C$6,106.0 million in 2024 to C$10,820.0 million in 2025 \u2014 a growth of 77.20% [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CNQ' AND metric = 'net_income' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 23.81,
+   "cost_usd": 0.00175,
+   "input_tokens": 4077,
+   "output_tokens": 364,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B05",
+   "category": "calc",
+   "question": "What was Shopify's gross margin (gross profit as a percent of revenue) in 2025?",
+   "answer": "Shopify (fiscal 2025): revenue = US$11.556 billion; gross profit = US$5.555 billion [F1]. Gross margin = 5.555 / 11.556 = 48.07% (fiscal 2025) [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'SHOP' AND fiscal_year = 2025 AND metric IN ('revenue', 'gross_profit') LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 12.91,
+   "cost_usd": 0.00207,
+   "input_tokens": 3983,
+   "output_tokens": 539,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B06",
+   "category": "calc",
+   "question": "What was BMO's compound annual revenue growth rate from fiscal 2023 to fiscal 2025?",
+   "answer": "BMO's compound annual revenue growth rate from fiscal 2023 to fiscal 2025 was 11.3443% (Revenue: C$29,259.0 million in 2023 to C$36,274.0 million in 2025) [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'BMO' AND metric = 'revenue' AND fiscal_year IN (2023, 2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 10.77,
+   "cost_usd": 0.00192,
+   "input_tokens": 4106,
+   "output_tokens": 447,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B07",
+   "category": "calc",
+   "question": "By how much did CIBC's net income increase in percent from fiscal 2024 to 2025?",
+   "answer": "CIBC net income rose from C$7,154,000,000 in fiscal 2024 to C$8,454,000,000 in fiscal 2025, an increase of 18.17% [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CM' AND metric = 'net_income' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 10.03,
+   "cost_usd": 0.00145,
+   "input_tokens": 4051,
+   "output_tokens": 220,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B08",
+   "category": "calc",
+   "question": "How much did Enbridge's spending on property, plant and equipment grow from 2024 to 2025 in percent?",
+   "answer": "Enbridge\u2019s cash additions to property, plant and equipment rose from C$6,711 million in 2024 to C$8,973 million in 2025 \u2014 an increase of 33.7% [S4] [F1].",
+   "tools_used": [
+    "search_filings",
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "S4": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 79,
+     "sql": null
+    },
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'ENB' AND metric = 'capex' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 15.32,
+   "cost_usd": 0.00361,
+   "input_tokens": 7398,
+   "output_tokens": 879,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B09",
+   "category": "calc",
+   "question": "What was RBC's return on assets in fiscal 2025, using net income divided by total assets?",
+   "answer": "RBC net income (total bank) in fiscal 2025: C$20,369,000,000 [F1].  \nRBC total assets at fiscal\u2011year end 2025: C$2,325,006,000,000 [F1].  \nReturn on assets (net income \u00f7 total assets) = 0.88% (0.0088) \u2014 computed from the figures above [F1].",
+   "tools_used": [
+    "query_financials",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'RY' AND fiscal_year = 2025 AND metric IN ('net_income', 'net_income_to_shareholders', 'total_assets') LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 20.13,
+   "cost_usd": 0.00271,
+   "input_tokens": 4232,
+   "output_tokens": 826,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "B10",
+   "category": "calc",
+   "question": "Among Cenovus, Suncor and Canadian Natural, which had the highest net income in 2025?",
+   "answer": "Canadian Natural (CNQ) had the highest net income in 2025: C$10,820,000,000. [F1]\n\nFor comparison: Cenovus (CVE) C$3,930,000,000; Suncor (SU) C$5,918,000,000. [F1]",
+   "tools_used": [
+    "query_financials",
+    "calculate",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT ticker, value, unit, source_tag FROM financials WHERE metric = 'net_income' AND fiscal_year = 2025 AND ticker IN ('CVE', 'SU', 'CNQ') LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": null,
+   "tool_accuracy": 1.0,
+   "latency_s": 14.54,
+   "cost_usd": 0.00228,
+   "input_tokens": 4860,
+   "output_tokens": 535,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C01",
+   "category": "text",
+   "question": "What was Cenovus's total production volume in 2025?",
+   "answer": "Cenovus\u2019s total production averaged 834.2 thousand BOE per day in 2025 (834.2 MBOE/d) [S2][S3].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S2": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "a2025managementsdiscussion.htm",
+     "page": 3,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "a2025managementsdiscussion.htm",
+     "page": 6,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 10.75,
+   "cost_usd": 0.00241,
+   "input_tokens": 5107,
+   "output_tokens": 569,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C02",
+   "category": "text",
+   "question": "When did Cenovus complete the MEG acquisition and how much cash did it pay?",
+   "answer": "Cenovus completed the MEG acquisition on November 13, 2025, and paid C$3.4 billion in cash as part of the purchase consideration [S1][S2][S3].",
+   "tools_used": [
+    "search_filings",
+    "query_financials",
+    "flag_issue"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "cve-20251231.htm",
+     "page": 19,
+     "sql": null
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "a2025annualinformationform.htm",
+     "page": 5,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "a2025managementsdiscussion.htm",
+     "page": 3,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 21.79,
+   "cost_usd": 0.00385,
+   "input_tokens": 7604,
+   "output_tokens": 975,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C03",
+   "category": "text",
+   "question": "What was RBC's CET1 ratio at the end of fiscal 2025?",
+   "answer": "RBC\u2019s Common Equity Tier 1 (CET1) ratio at October 31, 2025 was 13.5% [S2][S3].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S2": {
+     "type": "filing",
+     "ticker": "RY",
+     "fiscal_year": 2025,
+     "doc_file": "d95203dex2.htm",
+     "page": 99,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "RY",
+     "fiscal_year": 2025,
+     "doc_file": "d95203dex2.htm",
+     "page": 220,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 14.82,
+   "cost_usd": 0.00205,
+   "input_tokens": 4770,
+   "output_tokens": 430,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C04",
+   "category": "text",
+   "question": "What was TD's CET1 ratio as at October 31, 2025 and what was it a year earlier?",
+   "answer": "I couldn\u2019t find the reported Common Equity Tier 1 (CET1) ratios in the filing excerpts you provided. The documents you supplied include TD\u2019s regulatory capital tables and the inputs (CET1 capital components and risk-weighted assets) but the line showing \u201cCommon Equity Tier 1 Capital (as percentage of risk-weighted assets)\u201d is truncated/missing in those extracts [S3][S5][S2]. \n\nSpecifically:\n- The regulatory capital tables and CET1 capital components are present but the CET1 ratio line itself is not visible in the excerpts [S3][S5][S2].\n- The summary table covering \u201cRegulatory Capital Position\u201d that should include the CET1 ratio is also truncated in the excerpts [S2][S5].\n\nIf you can provide the remaining lines of Table 38 (the \u201cCapital Ratios and Multiples\u201d section) or grant another search, I can extract the exact CET1 ratios as at October 31, 2025 and October 31, 2024 and cite them directly.",
+   "tools_used": [
+    "search_filings",
+    "search_filings"
+   ],
+   "cited": {
+    "S3": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex992.htm",
+     "page": 47,
+     "sql": null
+    },
+    "S5": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex992.htm",
+     "page": 47,
+     "sql": null
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex993.htm",
+     "page": 95,
+     "sql": null
+    }
+   },
+   "answer_correctness": 0.0,
+   "citation_accuracy": 0.0,
+   "recall_at_5": 0.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 24.84,
+   "cost_usd": 0.0043,
+   "input_tokens": 9795,
+   "output_tokens": 928,
+   "faithfulness": null,
+   "unsupported_claims": null
+  },
+  {
+   "id": "C05",
+   "category": "text",
+   "question": "Why did BMO's CET1 ratio go down in fiscal 2025?",
+   "answer": "Short answer \u2014 BMO\u2019s CET1 ratio fell from 13.6% at Oct 31, 2024 to 13.3% at Oct 31, 2025 (a decline of 0.3 percentage points) because increases in risk-weighted assets and the capital impact of share cancellations more than offset internal capital generation [S3][S2][S1].\n\nKey supporting facts from the filings\n- CET1 Ratio: 13.6% (Oct 31, 2024) \u2192 13.3% (Oct 31, 2025); decline of 0.3 percentage points [S3][S2].  \n- CET1 Capital (C$ millions): increased from C$57,054 to C$58,286 \u2014 showing internal capital generation in the year [S1].  \n- RWA (C$ billions): increased from C$420.8bn to C$437.9bn; management says higher source\u2011currency RWA and credit/portfolio growth were drivers [S6][S8].  \n- Share cancellations: management specifically cites the purchase of 22.2 million common shares for cancellation as a capital-reducing action that contributed to the CET1 decline [S2].  \n\nManagement explanation (direct quote/paraphrase)\n- \u201cOur CET1 Ratio decreased from the prior year, as internal capital generation was more than offset by the impact of the purchase of 22.2 million common shares for cancellation and higher source currency risk\u2011weighted assets (RWA).\u201d [S2]\n\nIf you want, I can list the exact CET1 capital and RWA lines from the tables or flag any reconciliation issues between the CET1 amount and ratio disclosures.",
+   "tools_used": [
+    "search_filings",
+    "search_filings"
+   ],
+   "cited": {
+    "S3": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2025,
+     "doc_file": "d938207dex992.htm",
+     "page": 45,
+     "sql": null
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2025,
+     "doc_file": "d938207dex992.htm",
+     "page": 47,
+     "sql": null
+    },
+    "S1": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2025,
+     "doc_file": "d938207dex992.htm",
+     "page": 48,
+     "sql": null
+    },
+    "S6": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2025,
+     "doc_file": "d938207dex992.htm",
+     "page": 48,
+     "sql": null
+    },
+    "S8": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2025,
+     "doc_file": "d938207dex992.htm",
+     "page": 49,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 30.54,
+   "cost_usd": 0.00517,
+   "input_tokens": 10207,
+   "output_tokens": 1309,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C06",
+   "category": "text",
+   "question": "How much gross merchandise volume (GMV) did Shopify facilitate in 2025?",
+   "answer": "Shopify facilitated GMV of US$378.4 billion in the year ended December 31, 2025 [S1][S5].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "SHOP",
+     "fiscal_year": 2025,
+     "doc_file": "shop-20251231.htm",
+     "page": 48,
+     "sql": null
+    },
+    "S5": {
+     "type": "filing",
+     "ticker": "SHOP",
+     "fiscal_year": 2025,
+     "doc_file": "shop-20251231.htm",
+     "page": 46,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 22.22,
+   "cost_usd": 0.002,
+   "input_tokens": 4600,
+   "output_tokens": 425,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C07",
+   "category": "text",
+   "question": "When did TC Energy complete the spinoff of its Liquids Pipelines business, and what is the new company called?",
+   "answer": "TC Energy completed the spinoff on October 1, 2024, and the new company is called South Bow Corporation (South Bow) [S1][S3].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "TRP",
+     "fiscal_year": 2024,
+     "doc_file": "trp-20241231_d2.htm",
+     "page": 10,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "TRP",
+     "fiscal_year": 2025,
+     "doc_file": "trp-20251231_d2.htm",
+     "page": 22,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 15.7,
+   "cost_usd": 0.00166,
+   "input_tokens": 4240,
+   "output_tokens": 302,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C08",
+   "category": "text",
+   "question": "What assets did Canadian Natural acquire from Chevron in December 2024, and what share of AOSP does it own after the deal?",
+   "answer": "- Assets acquired (December 2024): a 70% operated working interest in the light crude oil and liquids\u2011rich Duvernay asset play in Alberta, and a 20% working interest in the AOSP (Albian Oil Sands Project). The acquisition also included various working interests in a number of other non\u2011producing oil sands leases [S1][S2].\n\n- AOSP ownership after the deal: Canadian Natural held a 90% direct and indirect working interest in AOSP (which includes the Muskeg River and Jackpine mines, the Scotford Upgrader, and the Quest Carbon Capture and Storage facility) as a result of the acquisition [S1][S2].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "CNQ",
+     "fiscal_year": 2025,
+     "doc_file": "cnq-20251231.htm",
+     "page": 99,
+     "sql": null
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "CNQ",
+     "fiscal_year": 2024,
+     "doc_file": "cnq-20241231.htm",
+     "page": 95,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 14.51,
+   "cost_usd": 0.00202,
+   "input_tokens": 4271,
+   "output_tokens": 475,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C09",
+   "category": "text",
+   "question": "When did RBC close its acquisition of HSBC Canada?",
+   "answer": "RBC completed (closed) its acquisition of HSBC Bank Canada on March 28, 2024 [S1][S3].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "RY",
+     "fiscal_year": 2024,
+     "doc_file": "d848219dex2.htm",
+     "page": 4,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "RY",
+     "fiscal_year": 2025,
+     "doc_file": "d95203dex2.htm",
+     "page": 172,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 14.54,
+   "cost_usd": 0.00164,
+   "input_tokens": 4254,
+   "output_tokens": 289,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C10",
+   "category": "text",
+   "question": "What total payment did TD agree to in the global resolution of the U.S. AML investigations?",
+   "answer": "TD agreed to a total payment of US$3.088 billion (C$4.233 billion), all of which was provisioned during the 2024 fiscal year [S1][S3].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2024,
+     "doc_file": "ex992.htm",
+     "page": 4,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex992.htm",
+     "page": 57,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 12.94,
+   "cost_usd": 0.0017,
+   "input_tokens": 4554,
+   "output_tokens": 282,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C11",
+   "category": "text",
+   "question": "What was Cenovus's total capital investment in 2025 compared with 2024?",
+   "answer": "Total capital investment was C$4,907 million in 2025 versus C$5,015 million in 2024 \u2014 a decrease of C$108 million, or about a 2.2% decline. [S2]",
+   "tools_used": [
+    "query_financials",
+    "search_filings",
+    "calculate"
+   ],
+   "cited": {
+    "S2": {
+     "type": "filing",
+     "ticker": "CVE",
+     "fiscal_year": 2025,
+     "doc_file": "a2025managementsdiscussion.htm",
+     "page": 10,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 27.11,
+   "cost_usd": 0.00408,
+   "input_tokens": 8707,
+   "output_tokens": 954,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C12",
+   "category": "text",
+   "question": "What was Suncor's upstream production in 2025?",
+   "answer": "Suncor reported total upstream production of 860,200 barrels per day (bbls/d) in 2025 [S1][S3].",
+   "tools_used": [
+    "search_filings",
+    "query_financials"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "SU",
+     "fiscal_year": 2025,
+     "doc_file": "su-20251231xex99d3.htm",
+     "page": 7,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "SU",
+     "fiscal_year": 2025,
+     "doc_file": "su-20251231xex99d3.htm",
+     "page": 4,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 15.46,
+   "cost_usd": 0.00264,
+   "input_tokens": 5374,
+   "output_tokens": 647,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C13",
+   "category": "text",
+   "question": "What is Canadian Natural's 2026 production guidance?",
+   "answer": "Canadian Natural's 2026 production guidance:\n- Total production: 1,615,000 BOE/d to 1,665,000 BOE/d [S3].\n- Crude oil and NGLs: 1,188,000 bbl/d to 1,229,000 bbl/d [S1].\n- Natural gas: 2,560 MMcf/d to 2,615 MMcf/d [S1].",
+   "tools_used": [
+    "search_filings",
+    "calculate"
+   ],
+   "cited": {
+    "S3": {
+     "type": "filing",
+     "ticker": "CNQ",
+     "fiscal_year": 2025,
+     "doc_file": "cnq-20251231.htm",
+     "page": 50,
+     "sql": null
+    },
+    "S1": {
+     "type": "filing",
+     "ticker": "CNQ",
+     "fiscal_year": 2025,
+     "doc_file": "cnq-20251231.htm",
+     "page": 136,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 23.27,
+   "cost_usd": 0.00366,
+   "input_tokens": 6960,
+   "output_tokens": 960,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C14",
+   "category": "text",
+   "question": "What was BMO's total provision for credit losses in fiscal 2025?",
+   "answer": "BMO\u2019s total provision for credit losses in fiscal 2025 was C$3,617 million [S3][S4].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S3": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2025,
+     "doc_file": "d938207dex992.htm",
+     "page": 17,
+     "sql": null
+    },
+    "S4": {
+     "type": "filing",
+     "ticker": "BMO",
+     "fiscal_year": 2025,
+     "doc_file": "d938207dex992.htm",
+     "page": 17,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 15.44,
+   "cost_usd": 0.00217,
+   "input_tokens": 4172,
+   "output_tokens": 561,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C15",
+   "category": "text",
+   "question": "How much gross capital expenditure does TC Energy expect in 2026?",
+   "answer": "TC Energy expects gross capital expenditures of approximately $6.0 to $6.5 billion in 2026 [S1].",
+   "tools_used": [
+    "search_filings"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "TRP",
+     "fiscal_year": 2025,
+     "doc_file": "trp-12312025xmda.htm",
+     "page": 21,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 14.3,
+   "cost_usd": 0.002,
+   "input_tokens": 3704,
+   "output_tokens": 535,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C16",
+   "category": "text",
+   "question": "By how much did Enbridge raise its quarterly common share dividend for 2026?",
+   "answer": "Enbridge raised its quarterly common share dividend by $0.0275 to $0.9700 (a 3% increase) [S1][S2].",
+   "tools_used": [
+    "search_filings",
+    "calculate"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 82,
+     "sql": null
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 81,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 17.51,
+   "cost_usd": 0.00304,
+   "input_tokens": 7169,
+   "output_tokens": 626,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "C17",
+   "category": "text",
+   "question": "How much revenue did Shopify's merchant solutions bring in during 2025?",
+   "answer": "For the year ended December 31, 2025, Shopify\u2019s merchant solutions revenue was US$8,804 million (US$8.804 billion) [S3][S1].",
+   "tools_used": [
+    "query_financials",
+    "search_filings"
+   ],
+   "cited": {
+    "S3": {
+     "type": "filing",
+     "ticker": "SHOP",
+     "fiscal_year": 2025,
+     "doc_file": "shop-20251231.htm",
+     "page": 53,
+     "sql": null
+    },
+    "S1": {
+     "type": "filing",
+     "ticker": "SHOP",
+     "fiscal_year": 2025,
+     "doc_file": "shop-20251231.htm",
+     "page": 47,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 0.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 17.87,
+   "cost_usd": 0.00232,
+   "input_tokens": 5472,
+   "output_tokens": 477,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "D01",
+   "category": "hybrid",
+   "question": "How did Cenovus's revenue change from 2024 to 2025, and what reason did the company give?",
+   "answer": "Cenovus revenue was C$54,277 million in 2024 and C$49,696 million in 2025 \u2014 a decrease of C$4,581 million (\u20118.44%) [F1]. I couldn\u2019t find the company\u2019s management explanation for the change in the provided filing extracts.",
+   "tools_used": [
+    "query_financials",
+    "calculate",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'CVE' AND metric = 'revenue' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 0.0,
+   "citation_accuracy": 0.5,
+   "recall_at_5": 0.0,
+   "tool_accuracy": 0.0,
+   "latency_s": 18.94,
+   "cost_usd": 0.00285,
+   "input_tokens": 4901,
+   "output_tokens": 812,
+   "faithfulness": null,
+   "unsupported_claims": null
+  },
+  {
+   "id": "D02",
+   "category": "hybrid",
+   "question": "TD's net income jumped in fiscal 2025. How big was the jump and what explains it?",
+   "answer": "- How big: TD reported net income of C$20,538 million in 2025 versus C$8,842 million in 2024 [F1, S1]. The absolute increase was C$11,696 million (C$20,538m \u2212 C$8,842m) [F1, S1]. I\u2019m unable to produce a precise percent change here because I can\u2019t run the required calculation tool right now; the two reported year figures are cited above for verification [F1, S1].\n\n- What explains it (drivers cited in the filings):\n  - Higher total revenue, driven by higher net interest income and much stronger non\u2011interest income in U.S. Retail and Corporate: total revenue rose to C$67,777m in 2025 from C$57,223m in 2024, with net interest income up (C$33,062m vs C$30,472m) and non\u2011interest income up (C$34,715m vs C$26,751m) \u2014 see the segment results table [S3].\n  - A large increase in items included in non\u2011interest income in 2025 (notably higher gains in derivatives/hedging and Corporate items): see the large increase in \u201cNet change in gain/(loss) on derivatives designated as cash flow hedges\u201d and other OCI reclassifications in the consolidated statement (page 13) and the higher non\u2011interest income in the segment table [S1, S3].\n  - Share of net income from the investment in Schwab contributed positively in 2025 (C$305m) and there was a Corporate\u2011segment gain on sale of Schwab shares noted in the discussion [S3, S6].\n  - A lower effective income tax rate in 2025 (reported effective tax rate 14.4% vs 24.8% last year) primarily reflecting the tax impact of the sale of Schwab shares in the current year and the absence of the prior\u2011year non\u2011deductible global resolution charges; total provision for income taxes rose in dollars but the effective rate declined, which increased after\u2011tax income [S4, S2].\n  - Partly offsetting items: higher provision for credit losses (PCL total C$4,506m in 2025 vs C$4,253m in 2024) and continued insurance service expenses, but non\u2011interest expenses were lower overall (C$33,539m in 2025 vs C$35,493m in 2024) \u2014 these dynamics are in the segment table and notes [S3].\n\nSources: consolidated net income and statement of comprehensive income [F1, S1], segment results and revenue/PCL/expenses breakdown [S3], income tax explanation and amounts including effective tax rate commentary [S2, S4], and MD&A discussion of 2024/2025 drivers [S6].",
+   "tools_used": [
+    "query_financials",
+    "search_filings",
+    "search_filings",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, metric, value, unit, source_tag FROM financials WHERE ticker = 'TD' AND metric = 'net_income' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    },
+    "S1": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex993.htm",
+     "page": 13,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex993.htm",
+     "page": 91,
+     "sql": null
+    },
+    "S6": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex992.htm",
+     "page": 35,
+     "sql": null
+    },
+    "S4": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex992.htm",
+     "page": 16,
+     "sql": null
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "TD",
+     "fiscal_year": 2025,
+     "doc_file": "ex993.htm",
+     "page": 82,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 0.5,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 30.89,
+   "cost_usd": 0.00659,
+   "input_tokens": 14269,
+   "output_tokens": 1513,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "D03",
+   "category": "hybrid",
+   "question": "How fast did Shopify's revenue grow in 2025 and which part of the business drove it?",
+   "answer": "Shopify\u2019s total revenue grew 30% year\u2011over\u2011year to US$11,556 million in 2025 (US$8,880 million in 2024) [F1][S5]. The growth was driven by merchant solutions, which rose to US$8,804 million in 2025 (a 35% increase) while subscription solutions were US$2,752 million (a 17% increase) \u2014 and the company states the mix has shifted toward merchant solutions, which has been an increasing contributor to revenue [S5][S4].",
+   "tools_used": [
+    "search_filings",
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'SHOP' AND metric = 'revenue' AND fiscal_year IN (2024, 2025) ORDER BY fiscal_year LIMIT 200"
+    },
+    "S5": {
+     "type": "filing",
+     "ticker": "SHOP",
+     "fiscal_year": 2025,
+     "doc_file": "shop-20251231.htm",
+     "page": 53,
+     "sql": null
+    },
+    "S4": {
+     "type": "filing",
+     "ticker": "SHOP",
+     "fiscal_year": 2025,
+     "doc_file": "shop-20251231.htm",
+     "page": 58,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 30.11,
+   "cost_usd": 0.00369,
+   "input_tokens": 6550,
+   "output_tokens": 1025,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "D04",
+   "category": "hybrid",
+   "question": "What were RBC's net income and CET1 ratio for fiscal 2025?",
+   "answer": "RBC net income (fiscal 2025): C$20,369 million (C$20.369 billion) [F1].\n\nCET1 ratio (as at Oct 31, 2025): 13.5% [S3].",
+   "tools_used": [
+    "query_financials",
+    "search_filings",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'RY' AND fiscal_year = 2025 AND metric IN ('net_income', 'net_income_to_shareholders') LIMIT 200"
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "RY",
+     "fiscal_year": 2025,
+     "doc_file": "d95203dex2.htm",
+     "page": 99,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": 1.0,
+   "recall_at_5": 1.0,
+   "tool_accuracy": 1.0,
+   "latency_s": 20.9,
+   "cost_usd": 0.00434,
+   "input_tokens": 8641,
+   "output_tokens": 1091,
+   "faithfulness": 1.0,
+   "unsupported_claims": []
+  },
+  {
+   "id": "E01",
+   "category": "refusal",
+   "question": "What will Cenovus's share price be at the end of 2027?",
+   "answer": "I can\u2019t give a 2027 share price based on the documents you provided.\n\nWhat the provided filings do show (for context)\n- Operating cash flow: C$8,228 million (2025) [F1].  \n- Revenue: C$49,696 million (2025) [F1].  \n- Net income: C$3,930 million (2025) [F1].  \n- Cash and cash equivalents: C$2,740 million (2025) [F2].\n\nWhy I can\u2019t project an end\u20112027 share price from these sources\n- The tables you gave do not contain any forward share\u2011price target, 2027 guidance, or a modeled valuation \u2014 there is no explicit projection of a 2027 share price in the data you supplied [F1][F2].  \n- A per\u2011share valuation requires (at minimum) a share count or market price and forward cash\u2011flow/earnings or an explicit company guidance pathway; the datasets returned here do not include a shares\u2011outstanding time series or a market price needed to convert totals into per\u2011share figures (those items are not present in the returned tables) [F1][F2].\n\nIf you want a modeled estimate, I can do that but I\u2019ll need at least:\n- Shares outstanding (or a recent market price and market cap), and\n- Any management guidance or explicit 2026\u20132027 forecasts from the filings, or permission to make assumptions (and then I will run calculations).\n\nTell me which additional inputs you can provide (or allow me to look up the filings/guidance) and I\u2019ll proceed.",
+   "tools_used": [
+    "query_financials",
+    "query_financials"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, metric, value, unit, source_tag FROM financials WHERE ticker = 'CVE' AND metric IN ('revenue', 'operating_cash_flow', 'capex', 'net_income', 'shares_outstanding') ORDER BY fiscal_year DESC LIMIT 200"
+    },
+    "F2": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT fiscal_year, metric, value, unit, source_tag FROM financials WHERE ticker = 'CVE' AND metric IN ('shares_outstanding', 'cash', 'capex') ORDER BY fiscal_year DESC LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": null,
+   "recall_at_5": null,
+   "tool_accuracy": null,
+   "latency_s": 23.23,
+   "cost_usd": 0.00382,
+   "input_tokens": 5515,
+   "output_tokens": 1222,
+   "faithfulness": null,
+   "unsupported_claims": null
+  },
+  {
+   "id": "E02",
+   "category": "refusal",
+   "question": "What was Apple's revenue in fiscal 2025?",
+   "answer": "I can only answer questions about the SEC annual filings of the 10 Canadian companies I support (Cenovus, Suncor, TC Energy, Enbridge, Canadian Natural, RBC, TD, BMO, CIBC and Shopify). I can't look up or report Apple (AAPL) financials. \n\nIf you want, ask for fiscal 2025 revenue (or any other filing detail) for one of the supported companies and I\u2019ll fetch it.",
+   "tools_used": [],
+   "cited": {},
+   "answer_correctness": 1.0,
+   "citation_accuracy": null,
+   "recall_at_5": null,
+   "tool_accuracy": null,
+   "latency_s": 6.13,
+   "cost_usd": 0.00097,
+   "input_tokens": 1325,
+   "output_tokens": 320,
+   "faithfulness": null,
+   "unsupported_claims": null
+  },
+  {
+   "id": "E03",
+   "category": "refusal",
+   "question": "Write me a short poem about pipelines.",
+   "answer": "Sorry\u2014I can only answer questions about the SEC annual filings of the ten companies I cover (Cenovus, Suncor, TC Energy, Enbridge, Canadian Natural, RBC, TD, BMO, CIBC and Shopify). I can\u2019t write a general poem about pipelines.\n\nIf you\u2019d like, I can instead:\n- Create a short poem about pipelines that references language or facts from TC Energy\u2019s or Enbridge\u2019s filings (I\u2019ll cite the filing passages), or\n- Summarize what those companies say about pipelines in their filings and then write a brief poem inspired by that.\n\nWhich company or option do you prefer?",
+   "tools_used": [],
+   "cited": {},
+   "answer_correctness": 1.0,
+   "citation_accuracy": null,
+   "recall_at_5": null,
+   "tool_accuracy": null,
+   "latency_s": 6.85,
+   "cost_usd": 0.00107,
+   "input_tokens": 1275,
+   "output_tokens": 374,
+   "faithfulness": null,
+   "unsupported_claims": null
+  },
+  {
+   "id": "E04",
+   "category": "refusal",
+   "question": "Should I buy TD stock right now?",
+   "answer": "I can\u2019t tell you whether to buy TD stock. I\u2019m only allowed to provide facts from the company\u2019s filings and not give investment advice. Below are key filing-based facts you can use to make your own decision (all figures from the TD filings) [F1]:\n\n- Revenue: C$57,223 million (2024) \u2192 C$67,777 million (2025) [F1].  \n- Net income (profit): C$8,842 million (2024) \u2192 C$20,538 million (2025) \u2014 increase of 132.28% (based on those reported amounts) [F1].  \n- Basic EPS: C$4.73 (2024) \u2192 C$11.57 (2025) \u2014 increase of 144.61% (based on those reported amounts) [F1].  \n- Operating cash flow: C$54,937 million (2024) \u2192 C$(69,646) million (2025) \u2014 a large negative swing in cash from operations year-over-year [F1].  \n- Cash and cash equivalents: C$6,437 million (2024) \u2192 C$7,512 million (2025) [F1].  \n- Dividends paid: C$7,160 million (2024) \u2192 C$7,663 million (2025) [F1].  \n- Total assets: C$2,061,751 million (2024) \u2192 C$2,094,558 million (2025) [F1].  \n- Total equity: C$115,160 million (2024) \u2192 C$127,827 million (2025) [F1].\n\nNotable filing-derived points:\n- Reported profitability and EPS materially increased in 2025 versus 2024 [F1].  \n- Operating cash flow swung from a large positive in 2024 to a large negative in 2025, which is a significant cash-flow development you should investigate further in the MD&A (I can search the filings text for explanations if you want) [F1].  \n- Dividends paid increased modestly year-over-year while equity and assets grew [F1].\n\nIf you\u2019d like, I can:\n- Search the filings for management\u2019s explanation of the operating cash flow swing and any one-time items or tax/other items that drove the surge in net income and EPS.  \n- Pull valuation metrics (P/E, P/B, dividend yield) from the filings and compute ratios.  \nTell me which of those you want and I\u2019ll fetch the relevant filing text and figures.",
+   "tools_used": [
+    "query_financials",
+    "calculate",
+    "calculate"
+   ],
+   "cited": {
+    "F1": {
+     "type": "financials",
+     "ticker": null,
+     "fiscal_year": null,
+     "doc_file": null,
+     "page": null,
+     "sql": "SELECT metric, fiscal_year, value, unit, source_tag FROM financials WHERE ticker = 'TD' AND fiscal_year IN (2024, 2025) AND metric IN ('revenue', 'net_income', 'net_income_to_shareholders', 'total_assets', 'total_equity', 'operating_cash_flow', 'capex', 'cash', 'eps_basic', 'dividends_paid', 'long_term_debt') ORDER BY metric, fiscal_year LIMIT 200"
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": null,
+   "recall_at_5": null,
+   "tool_accuracy": null,
+   "latency_s": 21.14,
+   "cost_usd": 0.00495,
+   "input_tokens": 6143,
+   "output_tokens": 1709,
+   "faithfulness": null,
+   "unsupported_claims": null
+  },
+  {
+   "id": "E05",
+   "category": "refusal",
+   "question": "What did Enbridge's CEO say on the Q3 2026 earnings call?",
+   "answer": "I couldn\u2019t find the Enbridge Q3 2026 earnings\u2011call transcript or any CEO remarks for Q3 2026 in the filings you gave me (search returned no matching passages) \u2014 the filings provided are Enbridge\u2019s 2025 10\u2011K excerpts [S1][S2][S3][S4][S5].\n\nI can summarize related items that do appear in those 2025 filings (in case they\u2019re helpful):\n- Recent quarterly and annual results (2025): operating revenues C$65,194 million and earnings C$7,789 million for the year; quarterly Q3 2025 operating revenues C$14,639 million and earnings C$847 million (quarterly table) [S2][S1].  \n- Segment performance (2025): EBITDA\u2011like measure \u2014 Liquids Pipelines C$9,396m, Gas Transmission C$5,491m, Gas Distribution & Storage C$3,809m, Renewable Power Generation C$620m (year) [S3].  \n- Items affecting 2025 earnings: a net unrealized derivative fair value gain (~C$1.3 billion; $999m after tax) vs a loss in 2024, equity earnings from DCP, absence of a 2024 gain on sale (~C$1.1b), and impairments including C$330m (rate\u2011regulated assets) and C$240m (non\u2011core liquids assets) [S4].  \n- Project commentary (2025): updates on Woodfibre LNG (Enbridge noncontrolling interest; expected in service 2027), T\u2011South (Sunrise) expansion (supports ~300 mmcf/d; expected in service 2028; CER recommended approval in 2026), and T\u2011North (Birch Grove) expansion details [S5].\n\nIf you want, I can (a) continue searching the available filings for any CEO/management remarks around quarterly results in 2025, or (b) flag that the Q3 2026 CEO remarks are not present in the provided filings. Which would you prefer?",
+   "tools_used": [
+    "search_filings",
+    "search_filings",
+    "search_filings"
+   ],
+   "cited": {
+    "S1": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 184,
+     "sql": null
+    },
+    "S2": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 99,
+     "sql": null
+    },
+    "S3": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 66,
+     "sql": null
+    },
+    "S4": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 67,
+     "sql": null
+    },
+    "S5": {
+     "type": "filing",
+     "ticker": "ENB",
+     "fiscal_year": 2025,
+     "doc_file": "enb-20251231.htm",
+     "page": 75,
+     "sql": null
+    }
+   },
+   "answer_correctness": 1.0,
+   "citation_accuracy": null,
+   "recall_at_5": null,
+   "tool_accuracy": null,
+   "latency_s": 24.68,
+   "cost_usd": 0.00433,
+   "input_tokens": 9136,
+   "output_tokens": 1022,
+   "faithfulness": null,
+   "unsupported_claims": null
+  },
+  {
+   "id": "E06",
+   "category": "refusal",
+   "question": "What is the population of Calgary?",
+   "answer": "Sorry \u2014 I can only answer questions about the SEC annual filings (fiscal 2024 and 2025) of the 10 named Canadian companies (Cenovus, Suncor, TC Energy, Enbridge, Canadian Natural, RBC, TD, BMO, CIBC and Shopify). I can't provide population figures for Calgary.",
+   "tools_used": [],
+   "cited": {},
+   "answer_correctness": 1.0,
+   "citation_accuracy": null,
+   "recall_at_5": null,
+   "tool_accuracy": null,
+   "latency_s": 7.31,
+   "cost_usd": 0.00102,
+   "input_tokens": 1307,
+   "output_tokens": 347,
+   "faithfulness": null,
+   "unsupported_claims": null
+  }
+ ]
+}

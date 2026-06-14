@@ -10,6 +10,7 @@ python -m evals.run --subset ci --check evals/baseline_ci.json   # exit 1 if sco
 import os
 import sys
 import csv
+import glob
 import json
 import argparse
 import subprocess
@@ -104,17 +105,13 @@ def run(args):
     summary = {
         "commit": sha, "commit_date": commit_date, "provider": args.provider or os.getenv("LLM_PROVIDER", "azure"),
         "subset": args.subset or ("custom" if args.ids else "full"), "questions": len(rows), "errors": len(rows) - len(ok),
-        **{m: avg([r[m] for r in ok]) for m in METRICS},
+        **summarize_scores(rows),
         "avg_latency_s": avg([r["latency_s"] for r in ok]),
         "p95_latency_s": p95([r["latency_s"] for r in ok]),
         "agent_cost_usd": round(total_cost, 4),
         "judge_cost_usd": round(judge_cost, 4),
         "cost_per_question_usd": round(total_cost / max(1, len(ok)), 5),
     }
-    # per category accuracy is useful for spotting what broke
-    for cat in sorted({r["category"] for r in ok}):
-        summary[f"correct_{cat}"] = avg([r["answer_correctness"] for r in ok if r["category"] == cat])
-
     print(json.dumps(summary, indent=2))
 
     if not args.no_save:
@@ -122,17 +119,59 @@ def run(args):
         name = f"{sha}_{summary['provider']}_{summary['subset']}.json"
         with open(os.path.join(HERE, "results", name), "w") as f:
             json.dump({"summary": summary, "items": rows}, f, indent=1)
-        hist = os.path.join(HERE, "results", "history.csv")
-        new = not os.path.exists(hist)
-        with open(hist, "a", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=list(summary.keys()), extrasaction="ignore")
-            if new:
-                w.writeheader()
-            w.writerow(summary)
+        write_history()
         print("saved", name)
 
     if args.check:
         return check(summary, args.check, args.tolerance)
+    return 0
+
+
+def summarize_scores(rows):
+    ok = [r for r in rows if "error" not in r]
+    out = {m: avg([r[m] for r in ok]) for m in METRICS}
+    for cat in sorted({r["category"] for r in ok}):
+        out[f"correct_{cat}"] = avg([r["answer_correctness"] for r in ok if r["category"] == cat])
+    return out
+
+
+def write_history():
+    """history.csv = one row per results json, rebuilt every time so rescored runs stay in sync"""
+    summaries = []
+    for path in sorted(glob.glob(os.path.join(HERE, "results", "*.json"))):
+        with open(path) as f:
+            summaries.append(json.load(f)["summary"])
+    summaries.sort(key=lambda s: s.get("commit_date", ""))
+    fields = []
+    for s in summaries:
+        fields += [k for k in s if k not in fields]
+    with open(os.path.join(HERE, "results", "history.csv"), "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=fields)
+        w.writeheader()
+        w.writerows(summaries)
+
+
+def rescore(path):
+    """re-grade saved answers after a scorer fix, no LLM calls. faithfulness + recall are kept as they were
+    (faithfulness needs the tool outputs which aren't saved)"""
+    with open(os.path.join(HERE, "golden_set.json")) as f:
+        golden = {i["id"]: i for i in json.load(f)}
+    with open(path) as f:
+        data = json.load(f)
+    for row in data["items"]:
+        if "error" in row:
+            continue
+        item = golden[row["id"]]
+        result = {"answer": row["answer"], "sources": row["cited"], "tools_used": row["tools_used"]}
+        row["answer_correctness"] = scorers.answer_correctness(item, result)
+        row["citation_accuracy"] = scorers.citation_accuracy(item, result)
+        row["tool_accuracy"] = scorers.tool_accuracy(item, result)
+    data["summary"].update(summarize_scores(data["items"]))
+    data["summary"]["rescored"] = True
+    with open(path, "w") as f:
+        json.dump(data, f, indent=1)
+    write_history()
+    print(json.dumps(data["summary"], indent=2))
     return 0
 
 
@@ -165,4 +204,6 @@ if __name__ == "__main__":
     p.add_argument("--no-save", action="store_true")
     p.add_argument("--check", help="baseline json, exit 1 if any metric drops more than --tolerance")
     p.add_argument("--tolerance", type=float, default=0.1)
-    sys.exit(run(p.parse_args()))
+    p.add_argument("--rescore", help="results json to re-grade with the current scorers (free)")
+    a = p.parse_args()
+    sys.exit(rescore(a.rescore) if a.rescore else run(a))

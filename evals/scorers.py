@@ -12,8 +12,9 @@ NUM = re.compile(r"(\d[\d,]*\.?\d*)\s*(trillion|billion|million|thousand|bn|b|m|
 # careful with these, "decline" used to be in here and matched "revenue declined" -> correct answers
 # got treated as refusals and skipped the faithfulness judge
 REFUSAL_PHRASES = ["couldn't find", "could not find", "can't answer", "cannot answer", "not able to answer", "unable to answer",
-                   "only answer questions", "i must decline", "i'll have to decline", "can't help with", "cannot help with",
-                   "can't provide", "cannot provide", "not in the filings", "outside what i can"]
+                   "only answer questions", "can only answer", "i must decline", "i'll have to decline", "can't help with",
+                   "cannot help with", "can't provide", "cannot provide", "can't give", "cannot give", "can't tell you",
+                   "only allowed to", "not in the filings", "outside what i can"]
 
 
 def extract_numbers(text):

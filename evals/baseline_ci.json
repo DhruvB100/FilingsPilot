@@ -1,0 +1,8 @@
+{
+  "answer_correctness": 0.9,
+  "faithfulness": 1.0,
+  "citation_accuracy": 0.944,
+  "recall_at_5": 0.75,
+  "tool_accuracy": 0.889,
+  "note": "CI subset scores from the full run on commit 36accc0. CI fails if a metric drops more than 0.1 below these."
+}
