@@ -1,5 +1,6 @@
 # secrets - never commit
 .env
+.env.example
 secrets/
 *.pem
 *-key.json
@@ -35,3 +36,8 @@ data/
 # misc
 .vscode/
 .DS_Store
+
+# terraform backend + plan files, db dumps
+backend.hcl
+tfplan
+*.dump
