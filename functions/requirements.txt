@@ -1,0 +1,9 @@
+azure-functions
+azure-storage-blob
+requests
+python-dotenv
+beautifulsoup4
+lxml
+psycopg[binary]
+pgvector
+openai

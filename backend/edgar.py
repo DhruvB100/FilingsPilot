@@ -126,19 +126,26 @@ def download_facts(company):
         json.dump(data, f)
 
 
-def run(tickers=None):
+def run(tickers=None, known_accessions=None):
+    """known_accessions = filings already in the db (the azure function passes these in,
+    its /tmp folder is empty every run so it can't rely on local files)"""
     new_filings = []
     for company in COMPANIES:
         if tickers and company["ticker"] not in tickers:
             continue
         print(company["name"])
         filings = list_annual_filings(company["cik"])[: config.YEARS_TO_KEEP]
+        got_new = False
         for filing in filings:
+            if known_accessions is not None and filing["accession"] in known_accessions:
+                continue
             year = filing["period_end"][:4]
             if not os.path.exists(os.path.join(config.RAW_DIR, company["ticker"], year, "meta.json")):
                 new_filings.append((company["ticker"], year))
+                got_new = True
             download_filing(company, filing)
-        download_facts(company)
+        if got_new or known_accessions is None:
+            download_facts(company)
     print("new filings:", new_filings)
     return new_filings
 

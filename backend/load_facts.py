@@ -105,7 +105,9 @@ def load_company(conn, company):
 def run():
     conn = get_conn()
     for company in COMPANIES:
-        load_company(conn, company)
+        # the daily function only downloads facts for companies that had a new filing
+        if os.path.exists(os.path.join(config.FACTS_DIR, company["ticker"] + ".json")):
+            load_company(conn, company)
 
 
 if __name__ == "__main__":
