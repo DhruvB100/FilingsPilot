@@ -1,0 +1,49 @@
+name: terraform
+
+on:
+  pull_request:
+    paths: ["infra/**"]
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: "run terraform apply after plan"
+        type: boolean
+        default: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
+
+  plan:
+    # needs the azure service principal + remote state, only when run by hand
+    if: github.event_name == 'workflow_dispatch'
+    needs: check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: infra
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: write tfvars + backend config from secrets
+        run: |
+          echo '${{ secrets.TFVARS }}' > terraform.tfvars
+          echo '${{ secrets.TF_BACKEND_CONFIG }}' > backend.hcl
+      - run: terraform init -backend-config=backend.hcl
+      - run: terraform plan -out tfplan
+      - if: inputs.apply
+        run: terraform apply -auto-approve tfplan
