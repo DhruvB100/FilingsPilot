@@ -12,8 +12,11 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.prebuilt import ToolNode
 
+from opentelemetry import trace
+
 from backend import llm as llm_module
 from backend.tools import make_tools
+from backend.telemetry import tracer, record_llm_usage
 
 # with_structured_output(include_raw=True) spams pydantic serializer warnings, harmless
 warnings.filterwarnings("ignore", message="Pydantic serializer warnings")
@@ -58,8 +61,8 @@ class State(MessagesState):
     cited: list[str]
 
 
-def build_agent(sources, provider=None):
-    tools = make_tools(sources)
+def build_agent(sources, provider=None, trace_parent=None):
+    tools = make_tools(sources, trace_parent)
     model = llm_module.get_llm(provider)
     model_with_tools = model.bind_tools(tools)
     planner = llm_module.get_llm(provider, max_tokens=800).with_structured_output(Plan, include_raw=True)
@@ -74,11 +77,13 @@ def build_agent(sources, provider=None):
     def plan_node(state):
         question = state["messages"][-1].content
         try:
-            out = planner.invoke([
-                SystemMessage("Plan how to answer this question with the tools search_filings, query_financials, "
-                              "calculate, flag_issue. Be brief. If it is off topic, the plan is just 'decline'."),
-                HumanMessage(question),
-            ])
+            with tracer.start_as_current_span("agent.plan", context=trace_parent) as span:
+                out = planner.invoke([
+                    SystemMessage("Plan how to answer this question with the tools search_filings, query_financials, "
+                                  "calculate, flag_issue. Be brief. If it is off topic, the plan is just 'decline'."),
+                    HumanMessage(question),
+                ])
+                record_llm_usage(span, out["raw"])
             steps = out["parsed"].steps if out["parsed"] else []
             update = count_tokens(state, out["raw"])
         except Exception as e:
@@ -93,12 +98,16 @@ def build_agent(sources, provider=None):
         msgs = [SystemMessage(SYSTEM_PROMPT + ("\n\nYour plan:\n" + plan_text if plan_text else ""))] + state["messages"]
         used = state.get("input_tokens", 0) + state.get("output_tokens", 0)
         try:
-            if used > MAX_TOKENS or state.get("tool_rounds", 0) >= MAX_TOOL_ROUNDS:
-                # out of budget -> answer with what we have, no more tools
-                msgs.append(HumanMessage("Tool budget used up. Answer now using only the sources above, with citations."))
-                response = model.invoke(msgs)
-            else:
-                response = model_with_tools.invoke(msgs)
+            with tracer.start_as_current_span("agent.llm", context=trace_parent) as span:
+                if used > MAX_TOKENS or state.get("tool_rounds", 0) >= MAX_TOOL_ROUNDS:
+                    # out of budget -> answer with what we have, no more tools
+                    span.set_attribute("agent.budget_hit", True)
+                    msgs.append(HumanMessage("Tool budget used up. Answer now using only the sources above, with citations."))
+                    response = model.invoke(msgs)
+                else:
+                    response = model_with_tools.invoke(msgs)
+                record_llm_usage(span, response)
+                span.set_attribute("llm.tool_calls", ",".join(tc["name"] for tc in response.tool_calls))
         except Exception as e:
             # azure's content filter (prompt shields) throws a 400 on jailbreak attempts instead of answering,
             # that used to crash the whole request. treat it as a refusal
@@ -192,8 +201,34 @@ def text_of(content):
 def stream_agent(question, history=None, provider=None):
     """yields events as the agent works: plan, tool_call, tool_result, token, and finally 'final'"""
     provider = provider or os.getenv("LLM_PROVIDER", "azure")
+    # this is a generator (streamed to the browser) so the span is started/ended by hand instead of "with".
+    # child spans get the parent passed explicitly, since the generator can resume in a different thread
+    run_span = tracer.start_span("agent.run")
+    run_span.set_attribute("agent.provider", provider)
+    run_span.set_attribute("agent.question_chars", len(question))
+    try:
+        result = None
+        for event in _stream(question, history, provider, trace.set_span_in_context(run_span)):
+            if event["type"] == "final":
+                result = event
+            yield event
+        run_span.set_attribute("agent.input_tokens", result["input_tokens"])
+        run_span.set_attribute("agent.output_tokens", result["output_tokens"])
+        run_span.set_attribute("agent.cost_usd", result["cost_usd"])
+        run_span.set_attribute("agent.tools_used", ",".join(result["tools_used"]))
+        run_span.set_attribute("agent.citations", len(result["sources"]))
+        run_span.set_attribute("agent.refused", not result["sources"])
+    except Exception as e:
+        run_span.record_exception(e)
+        run_span.set_status(trace.Status(trace.StatusCode.ERROR))
+        raise
+    finally:
+        run_span.end()
+
+
+def _stream(question, history, provider, trace_parent):
     sources = {}
-    app = build_agent(sources, provider)
+    app = build_agent(sources, provider, trace_parent)
     start = time.time()
     state = {"messages": to_messages(history) + [HumanMessage(question)]}
 

@@ -9,9 +9,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from backend.agent import stream_agent, run_agent
-from backend.memory import Memory
-from backend.tools import make_tools
+from backend import telemetry
+
+# has to run before the FastAPI app is created so requests get auto traced
+telemetry.setup()
+
+from backend.agent import stream_agent, run_agent  # noqa: E402
+from backend.memory import Memory  # noqa: E402
+from backend.tools import make_tools  # noqa: E402
 
 app = FastAPI(title="FilingsPilot")
 app.add_middleware(

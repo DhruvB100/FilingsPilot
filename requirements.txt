@@ -15,3 +15,4 @@ uvicorn
 azure-cosmos
 pytest
 httpx
+azure-monitor-opentelemetry

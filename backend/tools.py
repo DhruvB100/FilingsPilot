@@ -10,6 +10,7 @@ from langchain_core.tools import tool
 from backend import config
 from backend.search import hybrid_search
 from backend.sql_guard import check_sql, UnsafeSQL
+from backend.telemetry import traced_tool
 
 MAX_CHUNK_CHARS = 1500
 
@@ -34,8 +35,9 @@ def clean_for_prompt(text):
     return text.replace("<source", "&lt;source").replace("</source", "&lt;/source")
 
 
-def make_tools(sources):
-    """sources is a dict label -> info, filled while the agent runs"""
+def make_tools(sources, trace_parent=None):
+    """sources is a dict label -> info, filled while the agent runs.
+    trace_parent = otel context of the agent.run span so tool spans show up under it"""
 
     @tool
     def search_filings(query: str, tickers: list[str] | None = None, years: list[int] | None = None) -> str:
@@ -148,4 +150,7 @@ def make_tools(sources):
                            "url": os.getenv("JIRA_URL").rstrip("/") + "/browse/" + key}
         return f"Created Jira ticket {key}"
 
-    return [search_filings, query_financials, calculate, flag_issue]
+    tools = [search_filings, query_financials, calculate, flag_issue]
+    for t in tools:
+        t.func = traced_tool(t.name, t.func, trace_parent)
+    return tools
