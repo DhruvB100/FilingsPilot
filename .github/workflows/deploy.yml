@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # ghcr image names have to be lowercase and my username isn't
+      - run: echo "OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
@@ -32,8 +34,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/filingspilot-api:latest
-            ghcr.io/${{ github.repository_owner }}/filingspilot-api:${{ github.sha }}
+            ghcr.io/${{ env.OWNER }}/filingspilot-api:latest
+            ghcr.io/${{ env.OWNER }}/filingspilot-api:${{ github.sha }}
 
   rollout:
     needs: image

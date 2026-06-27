@@ -41,3 +41,4 @@ data/
 backend.hcl
 tfplan
 *.dump
+*.tsbuildinfo
