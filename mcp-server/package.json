@@ -1,0 +1,21 @@
+{
+  "name": "filingspilot-mcp",
+  "version": "0.1.0",
+  "description": "MCP server exposing the FilingsPilot tools (search_filings, query_financials, calculate, flag_issue)",
+  "type": "module",
+  "bin": {
+    "filingspilot-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "~5.9.2"
+  }
+}

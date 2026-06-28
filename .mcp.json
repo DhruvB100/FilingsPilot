@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "filingspilot": {
+      "command": "node",
+      "args": ["mcp-server/dist/index.js"],
+      "env": {
+        "FILINGSPILOT_API_URL": "http://localhost:8000"
+      }
+    }
+  }
+}
