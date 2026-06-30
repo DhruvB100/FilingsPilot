@@ -76,10 +76,11 @@ resource "azurerm_postgresql_flexible_server_firewall_rule" "me" {
 
 # ---------------- cosmos db: chat sessions (serverless = pay per request, basically free here) ----------------
 
+# cosmos gets its own region: canadacentral returned "high demand ... cannot fulfill your request"
 resource "azurerm_cosmosdb_account" "cosmos" {
   name                = "${local.name}-cosmos"
   resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  location            = var.cosmos_location
   offer_type          = "Standard"
   kind                = "GlobalDocumentDB"
 
@@ -92,7 +93,7 @@ resource "azurerm_cosmosdb_account" "cosmos" {
   }
 
   geo_location {
-    location          = azurerm_resource_group.rg.location
+    location          = var.cosmos_location
     failover_priority = 0
   }
 }
@@ -249,6 +250,11 @@ resource "azurerm_container_app" "api" {
       env {
         name  = "LLM_PROVIDER"
         value = "azure"
+      }
+      env {
+        # otherwise app insights shows the api as "unknown_service:python3.12"
+        name  = "OTEL_SERVICE_NAME"
+        value = "filingspilot-api"
       }
       env {
         name  = "MAX_TOKENS_PER_REQUEST"

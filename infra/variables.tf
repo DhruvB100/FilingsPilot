@@ -7,6 +7,11 @@ variable "location" {
   default = "canadacentral"
 }
 
+variable "cosmos_location" {
+  type    = string
+  default = "swedencentral"
+}
+
 variable "prefix" {
   type    = string
   default = "filingspilot"
